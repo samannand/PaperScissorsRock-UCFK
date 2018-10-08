@@ -4,6 +4,7 @@
 #include "tinygl.h"
 #include "../fonts/font5x7_1.h"
 #include "character.h"
+#include "ir_uart.h"
 
 
 #define PACER_RATE 500
@@ -13,7 +14,6 @@ char charList[3] = {'P','S','R'};
 
 int main (void)
 {
-
     char character = charList[0];
     int index = 0;
     system_init ();
@@ -34,6 +34,7 @@ int main (void)
 
         navswitch_update();
 
+        //choosing characters
         if (navswitch_push_event_p (NAVSWITCH_NORTH)) {
             index ++;
             character = change_char(charList, &index);
@@ -44,6 +45,15 @@ int main (void)
             character = change_char(charList, &index);
         }
         display_char(character);
+
+        //transmitting character to other device
+        if(navswitch_push_event_p(NAVSWITCH_PUSH)) {
+            ir_uart_putc(character);
+        }
+        //receive character
+        if(ir_uart_read_ready_p()) {
+            char received_character = ir_uart_getc();
+        }
     }
     return 0;
 }
