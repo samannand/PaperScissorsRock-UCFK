@@ -25,6 +25,7 @@ int main (void)
     tinygl_font_set (&font5x7_1);
     tinygl_text_speed_set (MESSAGE_RATE);
     tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
+    ir_uart_init();
 
     //Initialise navigation switch driver
     navswitch_init();
@@ -49,7 +50,7 @@ int main (void)
             index --;
             character = change_char(charList, &index);
         }
-        display_char(character);
+
 
         //transmitting character to other device
         if(navswitch_push_event_p(NAVSWITCH_PUSH)) {
@@ -59,14 +60,17 @@ int main (void)
         }
         //receive character
         if(ir_uart_read_ready_p()) {
-            recvChar = ir_uart_getc();
+            character = recvChar = ir_uart_getc();
             received = true;
         }
 
         if (transmitted && received) {
+            transmitted = false;
+            received = false;
             character = checkWinner(sentChar, recvChar);
-            display_char(character);
+            //display_char(character);
         }
+        display_char(character);
     }
     return 0;
 }
