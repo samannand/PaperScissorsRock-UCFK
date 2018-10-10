@@ -5,6 +5,7 @@
 #include "../fonts/font5x7_1.h"
 #include "character.h"
 #include "ir_uart.h"
+#include "stdbool.h"
 
 
 #define PACER_RATE 500
@@ -27,6 +28,8 @@ int main (void)
     navswitch_init();
 
     pacer_init (PACER_RATE);
+    bool transmitted = false;
+    bool received = false;
 
     while(1) {
         pacer_wait ();
@@ -49,10 +52,18 @@ int main (void)
         //transmitting character to other device
         if(navswitch_push_event_p(NAVSWITCH_PUSH)) {
             ir_uart_putc(character);
+            char sentChar = character;
+            transmitted = true;
         }
         //receive character
         if(ir_uart_read_ready_p()) {
             char received_character = ir_uart_getc();
+            received = true;
+        }
+
+        if (transmitted && received) {
+            character = checkWinner(sentChar, received_character);
+            display_char(character);
         }
     }
     return 0;
