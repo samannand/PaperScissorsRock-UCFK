@@ -83,11 +83,17 @@ int main (void)
         if (rounds >= 3 && winCount > (rounds - winCount)) {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("WINNER");
+            tinygl_update ();
+
         } else {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
+            tinygl_update ();
         }
-        display_char(character);
+
+        if (rounds < 3) {
+            display_char(character);
+        }
     }
     return 0;
 }
