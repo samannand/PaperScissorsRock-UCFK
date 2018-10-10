@@ -35,6 +35,7 @@ int main (void)
     pacer_init (PACER_RATE);
     bool transmitted = false;
     bool received = false;
+    bool gameOver = false;
 
     while(1) {
         pacer_wait ();
@@ -77,23 +78,21 @@ int main (void)
                 rounds += 1;
             }
 
-            //display_char(character);
         }
-
-        if (rounds >= 3 && winCount > (rounds - winCount)) {
-            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
-            tinygl_text("WINNER");
-            tinygl_update ();
-
-        } else {
-            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
-            tinygl_text("LOSER");
-            tinygl_update ();
-        }
-
         if (rounds < 3) {
             display_char(character);
+        } else if (rounds >= 3 && winCount > (rounds - winCount) && !gameOver) {
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+            tinygl_text("WINNER");
+            gameOver = true;
+
+        } else if (!gameOver){
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+            tinygl_text("LOSER");
+            gameOver = true;
         }
+
+
     }
     return 0;
 }
