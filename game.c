@@ -19,6 +19,8 @@ int main (void)
     char sentChar;
     char recvChar;
     int index = 0;
+    int rounds = 0;
+    int winCount = 0;
     system_init ();
 
     tinygl_init (PACER_RATE);
@@ -60,7 +62,7 @@ int main (void)
         }
         //receive character
         if(ir_uart_read_ready_p()) {
-            character = recvChar = ir_uart_getc();
+            recvChar = ir_uart_getc();
             received = true;
         }
 
@@ -68,7 +70,22 @@ int main (void)
             transmitted = false;
             received = false;
             character = checkWinner(sentChar, recvChar);
+            if (character == 'W') {
+                winCount += 1;
+            }
+            if (character != 'T') {
+                rounds += 1;
+            }
+
             //display_char(character);
+        }
+
+        if (rounds >= 3 && winCount > (rounds - winCount)) {
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+            tinygl_text("WINNER");
+        } else {
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+            tinygl_text("LOSER");
         }
         display_char(character);
     }
