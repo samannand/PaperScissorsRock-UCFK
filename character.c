@@ -27,7 +27,7 @@ char checkWinner(char sent, char recv) {
             result = 'W';
         }
     } else if (sent == 'R') {
-        if (recv = 'P') {
+        if (recv == 'P') {
             result = 'L';
         } else {
             result = 'W';

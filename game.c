@@ -16,6 +16,8 @@ char charList[3] = {'P','S','R'};
 int main (void)
 {
     char character = charList[0];
+    char sentChar;
+    char recvChar;
     int index = 0;
     system_init ();
 
@@ -52,17 +54,17 @@ int main (void)
         //transmitting character to other device
         if(navswitch_push_event_p(NAVSWITCH_PUSH)) {
             ir_uart_putc(character);
-            char sentChar = character;
+            sentChar = character;
             transmitted = true;
         }
         //receive character
         if(ir_uart_read_ready_p()) {
-            char received_character = ir_uart_getc();
+            recvChar = ir_uart_getc();
             received = true;
         }
 
         if (transmitted && received) {
-            character = checkWinner(sentChar, received_character);
+            character = checkWinner(sentChar, recvChar);
             display_char(character);
         }
     }
