@@ -22,6 +22,7 @@ int main (void)
     int rounds = 0;
     int winCount = 0;
     system_init ();
+    button_init();
 
     tinygl_init (PACER_RATE);
     tinygl_font_set (&font5x7_1);
@@ -86,13 +87,20 @@ int main (void)
             tinygl_text("WINNER");
             gameOver = true;
 
-        } else if (!gameOver){
+        } else if (!gameOver) {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
             gameOver = true;
         }
 
+        if (gameOver && button_pressed()) {
+            gameOver = false;
+            rounds = 0;
+            character = charList[0];
+            winCount = 0;
+            index = 0;
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
 
+        }
+        return 0;
     }
-    return 0;
-}
