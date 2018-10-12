@@ -7,7 +7,7 @@
 #include "ir_uart.h"
 #include "stdbool.h"
 #include "playButton.h"
-
+#include "blueLed.h"
 
 #define PACER_RATE 500
 #define MESSAGE_RATE 10
@@ -33,14 +33,14 @@ int main (void)
     //Initialise navigation switch driver
     navswitch_init();
     button_init();
-
+    led_init();
     pacer_init (PACER_RATE);
     bool transmitted = false;
     bool received = false;
     bool gameOver = false;
 
     while(1) {
-
+        led_off();
         pacer_wait ();
         tinygl_update ();
 
@@ -96,11 +96,13 @@ int main (void)
         }
 
         if(button_pressed() && gameOver) {
+            led_on();
             rounds = 0;
             winCount = 0;
             tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
             index = 0;
             character = charList[index];
+            gameOver = false;
 
         }
 

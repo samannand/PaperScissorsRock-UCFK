@@ -64,8 +64,11 @@ usart1.o: ../../drivers/avr/usart1.c ../../drivers/avr/system.h ../../drivers/av
 playbutton.o: playButton.c playButton.h ../../drivers/avr/system.h ../../drivers/avr/pio.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
+blueLed.o: blueLed.c ../../drivers/avr/pio.h ../../drivers/avr/system.h blueLed.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
 # Link: create ELF output file from object files.
-game.out: game.o system.o pio.o timer.o display.o ledmat.o navswitch.o font.o pacer.o tinygl.o character.o ir_uart.o prescale.o timer0.o usart1.o playButton.o
+game.out: game.o system.o pio.o timer.o display.o ledmat.o navswitch.o font.o pacer.o tinygl.o character.o ir_uart.o prescale.o timer0.o usart1.o playButton.o blueLed.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
