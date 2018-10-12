@@ -38,9 +38,12 @@ int main (void)
     bool transmitted = false;
     bool received = false;
     bool gameOver = false;
+    bool displayScore = false;
+
+    int tick = 0;
 
     while(1) {
-        led_off();
+        //led_off();
         pacer_wait ();
         tinygl_update ();
 
@@ -48,11 +51,13 @@ int main (void)
 
         //choosing characters
         if (navswitch_push_event_p (NAVSWITCH_NORTH)) {
+            led_off();
             index ++;
             character = change_char(charList, &index);
         }
 
         if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
+            led_off();
             index --;
             character = change_char(charList, &index);
         }
@@ -74,14 +79,27 @@ int main (void)
             transmitted = false;
             received = false;
             character = checkWinner(sentChar, recvChar);
+            displayScore = true;
             if (character == 'W') {
                 winCount += 1;
+                led_on();
             }
             if (character != 'T') {
                 rounds += 1;
             }
 
         }
+
+        if (displayScore) {
+            if (tick >= 500) {
+                char tempCount = winCount;
+                character = tempCount + '0';
+                displayScore = false;
+                tick = 0;
+            }
+            tick ++;
+        }
+
         if (rounds < 3) {
             display_char(character);
         } else if (rounds >= 3 && winCount > (rounds - winCount) && !gameOver) {
