@@ -95,8 +95,13 @@ int main (void)
             gameOver = true;
         }
 
-        if(button_pressed()) {
-            character = 'B';
+        if(button_pressed() && gameOver) {
+            rounds = 0;
+            winCount = 0;
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
+            index = 0;
+            character = charList[index];
+
         }
 
     }
