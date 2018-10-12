@@ -6,6 +6,7 @@
 #include "character.h"
 #include "ir_uart.h"
 #include "stdbool.h"
+#include "playButton.h"
 
 
 #define PACER_RATE 500
@@ -31,6 +32,7 @@ int main (void)
 
     //Initialise navigation switch driver
     navswitch_init();
+    button_init();
 
     pacer_init (PACER_RATE);
     bool transmitted = false;
@@ -38,6 +40,7 @@ int main (void)
     bool gameOver = false;
 
     while(1) {
+
         pacer_wait ();
         tinygl_update ();
 
@@ -86,12 +89,15 @@ int main (void)
             tinygl_text("WINNER");
             gameOver = true;
 
-        } else if (!gameOver){
+        } else if (!gameOver) {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
             gameOver = true;
         }
 
+        if(button_pressed()) {
+            character = 'B';
+        }
 
     }
     return 0;
