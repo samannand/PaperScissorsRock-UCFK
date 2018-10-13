@@ -65,8 +65,6 @@ int main (void)
 
 
 
-
-
         //transmitting character to other device
         if(navswitch_push_event_p(NAVSWITCH_PUSH) && !transmitted) {
             ir_uart_putc(character);
@@ -81,27 +79,28 @@ int main (void)
 
 
         if (transmitted && received) {
+            transmitted = false;
+            received = false;
             character = checkWinner(sentChar, recvChar);
-            if (character == 'E') {
+            if(character == 'E') {
                 character = charList[index];
+                transmitted = true;
             }
             display_char(character);
             displayScore = true;
             if (character == 'W') {
                 winCount += 1;
                 led_on();
+                rounds += 1;
             } else if (character == 'L') {
                 lossCount += 1;
-            }
-            if (character != 'T') {
                 rounds += 1;
             }
-            transmitted = false;
-            received = false;
+
 
         }
 
-        /*if (displayScore) {
+        if (displayScore) {
             if (tick >= 500) {
                 char tempCount = winCount;
                 character = tempCount + '0';
@@ -109,7 +108,8 @@ int main (void)
                 tick = 0;
             }
             tick ++;
-        }*/
+        }
+
 
         if (rounds < 3) {
             display_char(character);
