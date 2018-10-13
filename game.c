@@ -17,11 +17,12 @@ char charList[3] = {'P','S','R'};
 int main (void)
 {
     char character = charList[0];
-    char sentChar;
-    char recvChar;
+    char sentChar = charList[0];
+    char recvChar = charList[0];
     int index = 0;
     int rounds = 0;
     int winCount = 0;
+    int lossCount = 0;
     system_init ();
 
     tinygl_init (PACER_RATE);
@@ -83,6 +84,8 @@ int main (void)
             if (character == 'W') {
                 winCount += 1;
                 led_on();
+            } else if (character == 'L') {
+                lossCount += 1;
             }
             if (character != 'T') {
                 rounds += 1;
@@ -102,14 +105,18 @@ int main (void)
 
         if (rounds < 3) {
             display_char(character);
-        } else if (rounds >= 3 && winCount > (rounds - winCount) && !gameOver) {
+        } else if (winCount > lossCount && !gameOver) {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("WINNER");
             gameOver = true;
 
-        } else if (!gameOver) {
+        } else if (lossCount > winCount && !gameOver) {
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
+            gameOver = true;
+        } else {
+            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+            tinygl_text("TIE");
             gameOver = true;
         }
 
@@ -117,6 +124,7 @@ int main (void)
             led_on();
             rounds = 0;
             winCount = 0;
+            lossCount = 0;
             tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
             index = 0;
             character = charList[index];
