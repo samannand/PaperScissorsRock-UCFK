@@ -18,6 +18,12 @@ char change_char (char* charList, int *index)
 char checkWinner(char sent, char recv) {
 
     char result = 'T';
+
+    if (!(recv == 'R' || recv == 'P' || recv == 'S')) {
+        result = 'E';
+        return result;
+    }
+
     if (sent == recv) {
         return result;
     } else if (sent == 'P') {
