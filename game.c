@@ -65,20 +65,18 @@ int main (void)
 
 
         //transmitting character to other device
-        if(navswitch_push_event_p(NAVSWITCH_PUSH)) {
+        if(navswitch_push_event_p(NAVSWITCH_PUSH) && !transmitted) {
             ir_uart_putc(character);
             sentChar = character;
             transmitted = true;
         }
         //receive character
-        if(ir_uart_read_ready_p()) {
+        if(ir_uart_read_ready_p() && !received) {
             recvChar = ir_uart_getc();
             received = true;
         }
 
         if (transmitted && received) {
-            transmitted = false;
-            received = false;
             character = checkWinner(sentChar, recvChar);
             displayScore = true;
             if (character == 'W') {
@@ -90,6 +88,8 @@ int main (void)
             if (character != 'T') {
                 rounds += 1;
             }
+            transmitted = false;
+            received = false;
 
         }
 
@@ -114,10 +114,6 @@ int main (void)
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
             gameOver = true;
-        } else {
-            tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
-            tinygl_text("TIE");
-            gameOver = true;
         }
 
         if(button_pressed() && gameOver) {
@@ -125,6 +121,8 @@ int main (void)
             rounds = 0;
             winCount = 0;
             lossCount = 0;
+            transmitted = false;
+            received = false;
             tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
             index = 0;
             character = charList[index];
