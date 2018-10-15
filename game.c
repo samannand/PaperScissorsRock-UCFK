@@ -40,7 +40,6 @@ int main (void)
     tinygl_text_speed_set (MESSAGE_RATE);
     tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
 
-
     int index = 0;
     int rounds = 0;
     int winCount = 0;
@@ -52,7 +51,6 @@ int main (void)
     char sentChar = charList[0];
     char recvChar = charList[0];
 
-
     bool transmitted = false;
     bool received = false;
     bool gameOver = false;
@@ -60,9 +58,9 @@ int main (void)
 
 
     while(1) {
+
         pacer_wait ();
         tinygl_update ();
-
         navswitch_update();
 
         //choosing characters
@@ -118,7 +116,7 @@ int main (void)
 
         }
 
-        //displaying the score
+        //displaying the score after a small delay
         if (displayScore) {
             if (tick >= MAX_TICK) {
                 char tempCount = winCount;
