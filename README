@@ -1,0 +1,25 @@
+ENCE260 Assignment 2018
+Authors: Sam Annand, Alysha Voon
+Game: Paper Scissors Rock
+
+-----------------------SETTING UP THE GAME-----------------------
+1. Plug microcontroller into a USB port on the computer
+2. Locate the file directory in terminal
+    - use 'cd' to navigate through files (e.g. cd Documents -> cd ENCE260....)
+    - type 'make program'
+    - the game should now be loaded and ready to play on one microcontroller.
+3. Repeat steps to set up the game on the second microcontroller (on another computer)
+
+
+---------------------------GAME RULES ---------------------------
+This is a two player 'paper scissors rock' game
+1. Load the game onto the microcontroller and align the two microcontrollers so that the IR receiver on one controller is opposite the IR sender on the other
+2. Using the navswitch, go up or down to select between P (paper), S (scissors), R (rock)
+3. When you have chosen your character, PUSH the navswitch down to transmit.
+4. Once both players have transmitted, 'W' (win), 'L' (loss) or 'T' (tie) will display. This indicates whether you have won, loss or tied in the round, followed by your current score.
+5. There are 3 rounds (ties are not included).
+6. When the game is over, 'WINNER' or 'LOSER' will scroll across the screen, indicating who won the overall game.
+7. To start again, press the button.
+8. The blue LED lights up whenever you win.
+
+

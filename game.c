@@ -1,3 +1,11 @@
+/**
+ * @file game.c
+ * @author Sam Annand, Alysha Voon
+ * @brief Game module
+ * @date_created 5 Oct 2018
+ * @date_modified 15 Oct 2018
+ * */
+
 #include "system.h"
 #include "pacer.h"
 #include "navswitch.h"
@@ -11,40 +19,47 @@
 
 #define PACER_RATE 500
 #define MESSAGE_RATE 10
+#define MAX_TICK 500
+#define MAX_ROUNDS 3
 
-char charList[3] = {'P','S','R'};
+
 
 int main (void)
 {
-    char character = charList[0];
-    char sentChar = charList[0];
-    char recvChar = charList[0];
-    int index = 0;
-    int rounds = 0;
-    int winCount = 0;
-    int lossCount = 0;
+
+    //initialisations
     system_init ();
+    navswitch_init();
+    button_init();
+    led_init();
+    pacer_init (PACER_RATE);
+    ir_uart_init();
 
     tinygl_init (PACER_RATE);
     tinygl_font_set (&font5x7_1);
     tinygl_text_speed_set (MESSAGE_RATE);
     tinygl_text_mode_set(TINYGL_TEXT_MODE_STEP);
-    ir_uart_init();
 
-    //Initialise navigation switch driver
-    navswitch_init();
-    button_init();
-    led_init();
-    pacer_init (PACER_RATE);
+
+    int index = 0;
+    int rounds = 0;
+    int winCount = 0;
+    int lossCount = 0;
+    int tick = 0;
+
+    char charList[3] = {'P','S','R'};
+    char character = charList[0];
+    char sentChar = charList[0];
+    char recvChar = charList[0];
+
+
     bool transmitted = false;
     bool received = false;
     bool gameOver = false;
     bool displayScore = false;
 
-    int tick = 0;
 
     while(1) {
-        //led_off();
         pacer_wait ();
         tinygl_update ();
 
@@ -71,28 +86,28 @@ int main (void)
             sentChar = character;
             transmitted = true;
         }
-        //receive character
+        //receiving character
         if(ir_uart_read_ready_p() && !received) {
             recvChar = ir_uart_getc();
             received = true;
         }
 
-
+        //Calculating winner and scores
         if (transmitted && received) {
             transmitted = false;
             received = false;
             character = checkWinner(sentChar, recvChar);
-            if(character == 'E') {
+            if(character == 'E') { //error handling
                 character = charList[index];
                 transmitted = true;
             }
             display_char(character);
             displayScore = true;
-            if (character == 'W') {
+            if (character == 'W') { //won the round
                 winCount += 1;
                 led_on();
                 rounds += 1;
-            } else if (character == 'L') {
+            } else if (character == 'L') { //lost the round
                 lossCount += 1;
                 rounds += 1;
             }
@@ -100,8 +115,9 @@ int main (void)
 
         }
 
+        //displaying the score
         if (displayScore) {
-            if (tick >= 500) {
+            if (tick >= MAX_TICK) {
                 char tempCount = winCount;
                 character = tempCount + '0';
                 displayScore = false;
@@ -110,20 +126,21 @@ int main (void)
             tick ++;
         }
 
-
-        if (rounds < 3) {
+        //Showing who won the overall game
+        if (rounds < MAX_ROUNDS) {
             display_char(character);
-        } else if (winCount > lossCount && !gameOver) {
+        } else if (winCount > lossCount && !gameOver) { //won the game
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("WINNER");
             gameOver = true;
 
-        } else if (lossCount > winCount && !gameOver) {
+        } else if (lossCount > winCount && !gameOver) { //lost the game
             tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
             tinygl_text("LOSER");
             gameOver = true;
         }
 
+        //Reset game (start over)
         if(button_pressed() && gameOver) {
             led_on();
             rounds = 0;
