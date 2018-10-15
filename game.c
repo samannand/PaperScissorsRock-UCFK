@@ -22,7 +22,7 @@
 #define MAX_TICK 500
 #define MAX_ROUNDS 3
 
-
+char charList[3] = {'P','S','R'};
 
 int main (void)
 {
@@ -47,7 +47,6 @@ int main (void)
     int lossCount = 0;
     int tick = 0;
 
-    char charList[3] = {'P','S','R'};
     char character = charList[0];
     char sentChar = charList[0];
     char recvChar = charList[0];
@@ -100,6 +99,9 @@ int main (void)
             if(character == 'E') { //error handling
                 character = charList[index];
                 transmitted = true;
+            } else if (character == 'K') {
+                character = charList[index];
+                received = true;
             }
             display_char(character);
             displayScore = true;

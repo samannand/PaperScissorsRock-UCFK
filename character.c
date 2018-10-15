@@ -51,6 +51,11 @@ char checkWinner(char sent, char recv) {
         return result;
     }
 
+    if (!(sent == 'R' || sent == 'P' || sent == 'S')) {
+        result = 'K';
+        return result;
+    }
+
     if (sent == recv) {
         return result;
     } else if (sent == 'P') {
