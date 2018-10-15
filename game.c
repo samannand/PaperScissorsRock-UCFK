@@ -17,12 +17,12 @@
 #include "playButton.h"
 #include "blueLed.h"
 
-#define PACER_RATE 500
+#define PACER_RATE 1000
 #define MESSAGE_RATE 10
 #define MAX_TICK 500
 #define MAX_ROUNDS 3
 
-char charList[3] = {'P','S','R'};
+
 
 int main (void)
 {
@@ -47,6 +47,7 @@ int main (void)
     int lossCount = 0;
     int tick = 0;
 
+    char charList[3] = {'P','S','R'};
     char character = charList[0];
     char sentChar = charList[0];
     char recvChar = charList[0];
